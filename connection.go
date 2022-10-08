@@ -26,12 +26,9 @@ type mysqlConn struct {
 	rawConn          net.Conn // underlying connection when netConn is TLS connection.
 	affectedRows     uint64
 	insertId         uint64
-	cfg              *Config
 	maxAllowedPacket int
 	maxWriteSize     int
 	writeTimeout     time.Duration
-	flags            clientFlag
-	status           statusFlag
 	sequence         uint8
 	parseTime        bool
 	reset            bool // set when the Go SQL package calls ResetSession
@@ -41,8 +38,6 @@ type mysqlConn struct {
 	watcher  chan<- context.Context
 	closech  chan struct{}
 	finished chan<- struct{}
-	canceled atomicError // set non-nil if conn is canceled
-	closed   atomicBool  // set when conn is closed, before closech is closed
 }
 
 // Handles parameters set in DSN after the connection is established
